@@ -1,0 +1,60 @@
+#!/bin/bash -e
+#
+# GNU Bash required for process substitution `<()` later.
+#
+# Environment variables:
+#
+
+# Install xray and configure socks inbound
+cd "$GITHUB_WORKSPACE"
+wget https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh
+chmod +x install-release.sh
+sudo ./install-release.sh
+echo '{
+  "log": {
+    "loglevel": "warning",
+    "access": "/var/log/xray/access.log", 
+    "error": "/var/log/xray/error.log"
+  },
+  "inbounds": [
+    {
+      "port": 9999,
+      "listen": "127.0.0.1",
+      "protocol": "socks",
+      "sniffing": {
+          "enabled": false,
+          "destOverride": ["http", "tls"]
+      },
+      "settings": {
+          "auth": "noauth",
+          "udp": false
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
+}' | sudo tee /usr/local/etc/xray/config.json >/dev/null
+sudo systemctl restart xray
+
+# cloudflare tunnel
+
+./cloudflared tunnel --no-autoupdate --url tcp://localhost:9999 2>&1 | tee cloudflared-socks.log | sed -u 's/^/cloudflared: /' &
+url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
+
+message='Run the following command to connect:
+
+cloudflared access tcp --hostname '"$url"' --url 127.0.0.1:9999
+
+or use this if you want to share it with others on your network:
+
+cloudflared access tcp --hostname '"$url"' --url 0.0.0.0:9999
+
+then:
+
+socks5://127.0.0.1:9999'
+
+ruinerme "$message"

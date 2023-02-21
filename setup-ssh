@@ -1,0 +1,60 @@
+#!/bin/bash -e
+#
+# GNU Bash required for process substitution `<()` later.
+#
+# Environment variables:
+#
+# - `GITHUB_WORKSPACE`: path to this repository.
+# - `GITHUB_ACTOR`: GitHub username of whoever triggered the action.
+# - `GITHUB_WORKSPACE`: default path for the workflow (the tmux session will start there).
+#
+
+cd "$GITHUB_WORKSPACE"
+
+# Setting SSH password...
+password="$RUNNER_PASSWORD"
+(echo "$password"; echo "$password") | sudo passwd "$USER"
+
+# `-q` is to make it quiet, `-N ''` is for empty passphrase
+# Creating SSH server key...
+ssh-keygen -q -f ssh_host_rsa_key -N ''
+echo "$fingerprint"
+
+# Creating SSH server config...
+sed "s,\$PWD,$PWD,;s,\$USER,$USER," sshd_config.template > sshd_config
+
+# Starting SSH server...
+/usr/sbin/sshd -f sshd_config -D &
+sshd_pid=$!
+
+# Starting tmux session...
+tmux new-session -d -s debug
+
+# Use `sed -u` (unbuffered) otherwise logs don't show up in the UI
+# Starting Cloudflare tunnel...
+./cloudflared tunnel --no-autoupdate --url tcp://localhost:2222 2>&1 | tee cloudflared-ssh.log | sed -u 's/^/cloudflared: /' &
+cloudflared_pid=$!
+
+#
+# Tail `cloudflared-ssh.log` to find the part where they share the relay
+# hostname.
+#
+# Shell substitution `<()` required to prevent the pipeline from hanging
+# even after it finds a first match. See <https://stackoverflow.com/a/45327054>.
+#
+# Requires GNU Bash.
+#
+url=$(head -1 <(tail -f cloudflared-ssh.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
+
+# POSIX-compatible but just hangs
+# url=$(tail -f cloudflared-ssh.log | grep --line-buffered -o 'https://.*\.trycloudflare.com' | head -1)
+
+# POSIX-compatible using simple polling instead
+# url=$(while ! grep -o 'https://.*\.trycloudflare.com' cloudflared-ssh.log; do sleep 1; done)
+
+# Ignore the `user@host` part at the end of the public key
+public_key=$(cut -d' ' -f1,2 < ssh_host_rsa_key.pub)
+message="Run the following command to connect:
+
+ssh-keygen -R action-sshd-cloudflared && echo 'action-sshd-cloudflared $public_key' >> ~/.ssh/known_hosts && ssh -o ProxyCommand='cloudflared access tcp --hostname $url' runner@action-sshd-cloudflared"
+ruinerme "$message"

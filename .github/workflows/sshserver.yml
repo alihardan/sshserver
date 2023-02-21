@@ -1,0 +1,32 @@
+# Thanks: https://github.com/valeriangalliat/action-sshd-cloudflared
+name: CI
+on:
+  - workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      RUNNER_PASSWORD: ${{ secrets.RUNNER_PASSWORD }}
+      TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
+      TG_TARGET_ID: ${{ secrets.TG_TARGET_ID }}
+      TG_API_ID: ${{ secrets.TG_API_ID }}
+      TG_API_HASH: ${{ secrets.TG_API_HASH }}
+      TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: cp -r ./home/. ~
+      - run: sudo apt-get install -y unrar p7zip megatools aria2
+      - run: pip install -r requirements.txt
+      - run: pip install --upgrade python-telegram
+      - run: $GITHUB_WORKSPACE/setup-cloudflared
+        shell: bash
+      - run: $GITHUB_WORKSPACE/setup-socks
+        shell: bash
+      - run: $GITHUB_WORKSPACE/setup-ssh
+        shell: bash
+      - name: Keep Alive
+        run: |
+          tmux wait-for channel
+          echo 'Session ended'
+          pkill cloudflared
+          pkill sshd
