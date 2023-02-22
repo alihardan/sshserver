@@ -45,7 +45,7 @@ sudo systemctl restart xray
 ./cloudflared tunnel --no-autoupdate --url tcp://localhost:9999 2>&1 | tee cloudflared-socks.log | sed -u 's/^/cloudflared: /' &
 url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
 
-message='Run the following command to connect:
+message='Run the following command to transfer socks port to your network:
 
 cloudflared access tcp --hostname '"$url"' --url 127.0.0.1:9999
 
@@ -55,6 +55,13 @@ cloudflared access tcp --hostname '"$url"' --url 0.0.0.0:9999
 
 then:
 
-socks5://127.0.0.1:9999'
+socks5://127.0.0.1:9999
+
+I suggest to use this v2ray configuration, maybe better than using socks without intermediary. makes .ir sites direct, and enable snifing true for better dns handling:
+
+
+{"inbounds":[{"port":9998,"listen":"127.0.0.1","protocol":"socks","sniffing":{"enabled":true,"destOverride":["http","tls"]},"settings":{"auth":"noauth","udp":false}}],"outbounds":[{"protocol":"socks","settings":{"servers":[{"address":"127.0.0.1","port":9999}]}},{"protocol":"freedom","tag":"direct","settings":{}}],"dns":{"servers":["1.1.1.1","8.8.8.8","8.8.4.4"]},"routing":{"domainStrategy":"IPIfNonMatch","rules":[{"type":"field","domain":[".ir"],"outboundTag":"direct"}]}}
+
+'
 
 ruinerme "$message"
