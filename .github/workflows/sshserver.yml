@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - run: cd ./home/ && echo $SECRET_FILES | base64 --decode > SECRET_FILES.tar.gz && tar -xf SECRET_FILES.tar.gz
       - run: cp -r ./home/. ~
+      - run: curl -L 'https://github.com/glotlabs/gdrive/releases/download/3.6.0/gdrive_linux-x64.tar.gz' | tar -xz -C ~/.local/bin
       - run: sudo apt-get install -y unrar p7zip megatools aria2
       - run: pip install -r requirements.txt
       - run: pip install --upgrade python-telegram
