@@ -28,7 +28,7 @@ sed "s,\$PWD,$PWD,;s,\$USER,$USER," sshd_config.template > sshd_config
 sshd_pid=$!
 
 # Starting tmux session...
-tmux new-session -d -s debug
+tmux new-session -d -s debug -c ~
 
 # Use `sed -u` (unbuffered) otherwise logs don't show up in the UI
 # Starting Cloudflare tunnel...
