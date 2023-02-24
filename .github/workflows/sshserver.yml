@@ -12,8 +12,10 @@ jobs:
       TG_API_ID: ${{ secrets.TG_API_ID }}
       TG_API_HASH: ${{ secrets.TG_API_HASH }}
       TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+      SECRET_FILES: ${{ secrets.SECRET_FILES }}
     steps:
       - uses: actions/checkout@v3
+      - run: cd ./home/ && echo $SECRET_FILES | base64 --decode > SECRET_FILES.tar.gz && tar -xf SECRET_FILES.tar.gz
       - run: cp -r ./home/. ~
       - run: sudo apt-get install -y unrar p7zip megatools aria2
       - run: pip install -r requirements.txt
