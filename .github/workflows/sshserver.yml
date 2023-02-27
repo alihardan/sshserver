@@ -15,7 +15,7 @@ jobs:
       SECRET_FILES: ${{ secrets.SECRET_FILES }}
     steps:
       - uses: actions/checkout@v3
-      - run: echo $SECRET_FILES | base64 --decode | tar -xz -C ./home/
+      - run: if [ ! -z "$SECRET_FILES" ]; then echo $SECRET_FILES | base64 --decode | tar -xz -C ./home/; fi
       - run: cp -r ./home/. ~
       - run: curl -L 'https://github.com/glotlabs/gdrive/releases/download/3.6.0/gdrive_linux-x64.tar.gz' | tar -xz -C ~/.local/bin
       - run: sudo apt-get install -y unrar p7zip megatools aria2
