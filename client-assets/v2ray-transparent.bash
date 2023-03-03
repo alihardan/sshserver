@@ -28,8 +28,8 @@ iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
 iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 9997
 
 # Add any UDP rules
-#ip route add local default dev lo table 100
-#ip rule add fwmark 1 lookup 100
+ip route add local default dev lo table 100
+ip rule add fwmark 1 lookup 100
 iptables -t mangle -A V2RAY -p udp -j TPROXY --on-port 9997 --tproxy-mark 0x01/0x01
 iptables -t mangle -A V2RAY_MARK -p udp -j MARK --set-mark 1
 
