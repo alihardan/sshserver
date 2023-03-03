@@ -27,7 +27,7 @@ echo '{
       },
       "settings": {
           "auth": "noauth",
-          "udp": false
+          "udp": true
       }
     }
   ],
@@ -60,7 +60,7 @@ socks5://127.0.0.1:9999
 I suggest to use this v2ray configuration, maybe better than using socks without intermediary. makes .ir sites direct, and enable snifing true for better dns handling:
 
 
-{"inbounds":[{"port":9998,"listen":"127.0.0.1","protocol":"socks","sniffing":{"enabled":true,"destOverride":["http","tls"]},"settings":{"auth":"noauth","udp":false}}],"outbounds":[{"protocol":"socks","settings":{"servers":[{"address":"127.0.0.1","port":9999}]}},{"protocol":"freedom","tag":"direct","settings":{}}],"dns":{"servers":["1.1.1.1","8.8.8.8","8.8.4.4"]},"routing":{"domainStrategy":"IPIfNonMatch","rules":[{"type":"field","domain":[".ir"],"outboundTag":"direct"}]}}
+{"inbounds":[{"port":9998,"listen":"127.0.0.1","protocol":"socks","sniffing":{"enabled":true,"destOverride":["http","tls"]},"settings":{"auth":"noauth","udp":true}}],"outbounds":[{"protocol":"socks","settings":{"servers":[{"address":"127.0.0.1","port":9999}]}},{"protocol":"freedom","tag":"direct","settings":{}}],"dns":{"servers":["1.1.1.1","8.8.8.8","8.8.4.4"]},"routing":{"domainStrategy":"IPIfNonMatch","rules":[{"type":"field","domain":[".ir"],"outboundTag":"direct"}]}}
 
 '
 
