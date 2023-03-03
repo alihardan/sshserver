@@ -49,7 +49,7 @@ message='
 # user `tor` used because i excluded server at iptables transparent proxy configuration by proccess username
 # Important: You should put cloudflare domain & ip at /etc/hosts to avoid loop if you wanna use transparent proxy
 
-sudo sh -c ''echo -e $(resolveip -s '"$hostname"')"\t'"$hostname"'" >> /etc/hosts'' && sudo -u tor cloudflared access tcp --hostname '"$url"' --url 0.0.0.0:9999 & && sudo -u tor xray -c /config.json & && sudo ./v2ray-transparent.bash
+sudo sh -c '"'"'echo -e $(resolveip -s '"$hostname"')"\t'"$hostname"'" >> /etc/hosts'"'"' && sudo -u tor cloudflared access tcp --hostname '"$url"' --url 0.0.0.0:9999 & sudo -u tor xray -c /config.json & sudo ./v2ray-transparent.bash
 
 
 
