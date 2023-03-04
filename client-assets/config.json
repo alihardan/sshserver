@@ -27,10 +27,5 @@
       "protocol": "socks",
       "settings": { "servers": [{ "address": "127.0.0.1", "port": 9999 }] }
     }
-  ],
-  "dns": { "servers": ["1.1.1.1", "8.8.8.8", "8.8.4.4"] },
-  "routing": {
-    "domainStrategy": "IPIfNonMatch",
-    "rules": [{ "type": "field", "domain": [".ir"], "outboundTag": "direct" }]
-  }
+  ]
 }
