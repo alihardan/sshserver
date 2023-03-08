@@ -13,19 +13,27 @@
         "destOverride": ["http", "tls"],
         "metadataOnly": false
       }
-    },
-    {
-      "port": 9998,
-      "listen": "127.0.0.1",
-      "protocol": "socks",
-      "sniffing": { "enabled": true, "destOverride": ["http", "tls"] },
-      "settings": { "auth": "noauth", "udp": true }
     }
   ],
   "outbounds": [
     {
       "protocol": "socks",
       "settings": { "servers": [{ "address": "127.0.0.1", "port": 9999 }] }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "direct",
+      "settings": {}
     }
-  ]
+  ],
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "direct",
+        "ip": ["geoip:private"]
+      }
+    ]
+  }
 }
