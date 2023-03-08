@@ -27,7 +27,17 @@ setup_iptables() {
             iptables -t nat -A V2RAY -d 192.168.0.0/16 -j RETURN
             iptables -t nat -A V2RAY -d 224.0.0.0/4 -j RETURN
             iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
-            
+
+            # Added by me. maybe not needed?
+            iptables -t mangle -A V2RAY -d 0.0.0.0/8 -j RETURN
+            iptables -t mangle -A V2RAY -d 10.0.0.0/8 -j RETURN
+            iptables -t mangle -A V2RAY -d 127.0.0.0/8 -j RETURN
+            iptables -t mangle -A V2RAY -d 169.254.0.0/16 -j RETURN
+            iptables -t mangle -A V2RAY -d 172.16.0.0/12 -j RETURN
+            iptables -t mangle -A V2RAY -d 192.168.0.0/16 -j RETURN
+            iptables -t mangle -A V2RAY -d 224.0.0.0/4 -j RETURN
+            iptables -t mangle -A V2RAY -d 240.0.0.0/4 -j RETURN
+
             # Anything else should be redirected to Dokodemo-door's local port
             iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 9997
             
@@ -48,6 +58,7 @@ setup_iptables() {
         default)
             printf "%s\\n" "Restore default iptables"
 
+            # flush iptables rules
             ip route del local default dev lo table 100
             ip rule del fwmark 1 lookup 100
             iptables -F
