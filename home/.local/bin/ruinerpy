@@ -14,4 +14,7 @@ app = Client(
 )
 app.start()
 for file in sys.argv[1:]:
-    app.send_document(int(os.environ.get("TG_TARGET_ID")), file)
+    if os.path.getsize(file) > 2097152000:
+        print("filesize of `" + file + "` is greater than 2GB")
+    else:
+        app.send_document(int(os.environ.get("TG_TARGET_ID")), file)
