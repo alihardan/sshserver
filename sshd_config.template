@@ -24,3 +24,7 @@ AuthorizedKeysFile $PWD/authorized_keys
 ForceCommand tmux attach
 
 # vim: ft=sshdconfig
+
+# https://unix.stackexchange.com/questions/2010/what-does-the-broken-pipe-message-mean-in-an-ssh-session
+TCPKeepAlive yes
+KeepAlive yes
