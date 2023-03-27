@@ -21,7 +21,7 @@ AllowUsers $USER
 AuthorizedKeysFile $PWD/authorized_keys
 
 # Force to start tmux on login (It make sshuttle not working)
-ForceCommand tmux attach
+# ForceCommand tmux attach
 
 # vim: ft=sshdconfig
 
