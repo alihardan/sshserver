@@ -42,9 +42,11 @@ sudo systemctl restart xray
 
 # cloudflare tunnel
 
-./cloudflared tunnel --no-autoupdate --url tcp://localhost:9999 2>&1 | tee cloudflared-socks.log | sed -u 's/^/cloudflared: /' &
-url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
-hostname=${url:8}
-message='sudo sh -c '"'"'echo -e $(resolveip -s '"$hostname"')"\t'"$hostname"'" >> /etc/hosts'"'"' && sudo -u tor cloudflared access tcp --hostname '"$url"' --url 0.0.0.0:9999 & sudo -u tor xray -c /config.json & sudo ./v2ray-transparent.bash -s'
+./cloudflared tunnel run slm
 
-ruinerme "$message"
+#./cloudflared tunnel --no-autoupdate --url tcp://localhost:9999 2>&1 | tee cloudflared-socks.log | sed -u 's/^/cloudflared: /' &
+#url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
+#hostname=${url:8}
+#message='sudo sh -c '"'"'echo -e $(resolveip -s '"$hostname"')"\t'"$hostname"'" >> /etc/hosts'"'"' && sudo -u tor cloudflared access tcp --hostname '"$url"' --url 0.0.0.0:9999 & sudo -u tor xray -c /config.json & sudo ./v2ray-transparent.bash -s'
+
+#ruinerme "$message"
