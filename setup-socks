@@ -42,7 +42,7 @@ sudo systemctl restart xray
 
 # cloudflare tunnel
 
-./cloudflared tunnel run slm
+./cloudflared tunnel run slm &
 
 #./cloudflared tunnel --no-autoupdate --url tcp://localhost:9999 2>&1 | tee cloudflared-socks.log | sed -u 's/^/cloudflared: /' &
 #url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
