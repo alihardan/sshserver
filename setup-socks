@@ -22,9 +22,8 @@ echo '{
       "listen": "127.0.0.1",
       "protocol": "socks",
       "sniffing": {
-          "enabled": true,
-          "destOverride": ["http", "tls"],
-          "metadataOnly": false
+          "enabled": false,
+          "destOverride": ["http", "tls"]
       },
       "settings": {
           "auth": "noauth",
