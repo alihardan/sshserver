@@ -14,6 +14,7 @@ setup_iptables() {
             # Ignore your server proccess
             # It's very IMPORTANT, just be careful.
             iptables -t nat -A OUTPUT -m owner --uid-owner "tor" -j RETURN
+            iptables -t nat -A OUTPUT -m owner --uid-owner "dnscrypt-proxy" -j RETURN
             # iptables -t mangle -A OUTPUT -m owner --uid-owner "tor" -j RETURN # Not worked
             # iptables -t mangle -A POSTROUTING -m owner --uid-owner "tor" -j RETURN # Not worked
             
