@@ -7,7 +7,7 @@
 
 # Install xray and configure socks inbound
 cd "$GITHUB_WORKSPACE"
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --beta
+sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --beta
 echo '{
   "log": {
     "loglevel": "warning",
