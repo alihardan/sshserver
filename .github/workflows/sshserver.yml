@@ -23,7 +23,7 @@ jobs:
       - run: pip install --upgrade python-telegram
       - run: $GITHUB_WORKSPACE/setup-cloudflared
         shell: bash
-      - run: $GITHUB_WORKSPACE/setup-socks
+      - run: $GITHUB_WORKSPACE/setup-proxies
         shell: bash
       - run: $GITHUB_WORKSPACE/setup-ssh
         shell: bash

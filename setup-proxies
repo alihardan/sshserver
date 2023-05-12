@@ -7,9 +7,7 @@
 
 # Install xray and configure socks inbound
 cd "$GITHUB_WORKSPACE"
-wget https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh
-chmod +x install-release.sh
-sudo ./install-release.sh
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --beta
 echo '{
   "log": {
     "loglevel": "warning",
@@ -29,6 +27,33 @@ echo '{
           "auth": "noauth",
           "udp": true
       }
+    },
+    {
+      "listen": "0.0.0.0",
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "1",
+            "flow": "xtls-rprx-vision"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "githubstatus.com:443",
+          "xver": 0,
+          "serverNames": ["githubstatus.com", "www.githubstatus.com"],
+          "privateKey": "UP8j_LtDMAazzf-d-U63LrTWM1XckIz9YIa8T0XvW2U",
+          "maxTimeDiff": 0,
+          "shortIds": ["b18d5c"]
+        }
+      }
     }
   ],
   "outbounds": [
@@ -43,6 +68,7 @@ sudo systemctl restart xray
 # cloudflare tunnel
 
 ./cloudflared tunnel run slm &
+autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -R 0:localhost:443 serveo.net &
 
 #./cloudflared tunnel --no-autoupdate --url tcp://localhost:9999 2>&1 | tee cloudflared-socks.log | sed -u 's/^/cloudflared: /' &
 #url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
