@@ -69,7 +69,7 @@ sudo systemctl restart xray
 # cloudflare tunnel
 
 ./cloudflared tunnel run slm &
-autossh -oStrictHostKeyChecking=no -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -R 0:localhost:443 serveo.net &
+autossh -oStrictHostKeyChecking=no -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -R 87777:localhost:443 serveo.net &
 
 #./cloudflared tunnel --no-autoupdate --url tcp://localhost:9999 2>&1 | tee cloudflared-socks.log | sed -u 's/^/cloudflared: /' &
 #url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
