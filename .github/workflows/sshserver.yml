@@ -1,7 +1,9 @@
 # Thanks: https://github.com/valeriangalliat/action-sshd-cloudflared
 name: CI
 on:
-  - workflow_dispatch
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
