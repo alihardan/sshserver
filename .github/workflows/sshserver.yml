@@ -26,8 +26,8 @@ jobs:
       - run: cp -r ./home/. ~
       - run: curl -L 'https://github.com/glotlabs/gdrive/releases/download/3.6.0/gdrive_linux-x64.tar.gz' | tar -xz -C ~/.local/bin
       - run: sudo apt-get install -y unrar p7zip megatools aria2
-      - run: pip install -r requirements.txt
-      - run: pip install --upgrade python-telegram
+      - run: pipx install -r requirements.txt
+      - run: pipx install --upgrade python-telegram
       - run: $GITHUB_WORKSPACE/setup-cloudflared
         shell: bash
       # - run: $GITHUB_WORKSPACE/setup-proxies
