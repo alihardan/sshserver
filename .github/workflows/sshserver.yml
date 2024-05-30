@@ -17,6 +17,11 @@ jobs:
       SECRET_FILES: ${{ secrets.SECRET_FILES }}
     steps:
       - run: sudo rm -rf /usr/local /opt/hostedtoolcache /opt/az /opt/microsoft /opt/pipx /opt/google
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: npm
       - uses: actions/checkout@v3
       - run: if [ ! -z "$SECRET_FILES" ]; then echo $SECRET_FILES | base64 --decode | tar -xz -C ./home/; fi
       - run: cp -r ./home/. ~
