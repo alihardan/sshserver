@@ -57,4 +57,4 @@ public_key=$(cut -d' ' -f1,2 < ssh_host_rsa_key.pub)
 message="Run the following command to connect:
 
 ssh-keygen -R action-sshd-cloudflared && echo 'action-sshd-cloudflared $public_key' >> ~/.ssh/known_hosts && ssh -o ProxyCommand='cloudflared access tcp --hostname $url' runner@action-sshd-cloudflared"
-./tg/bin/python ruinerme "$message"
+./tg/bin/python ~/.local/bin/ruinerme "$message"
