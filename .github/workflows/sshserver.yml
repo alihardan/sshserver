@@ -29,8 +29,8 @@ jobs:
       - run: python3 -m venv ./tg
       - run: ./tg/bin/pip install -r requirements.txt
       - run: ./tg/bin/pip install --upgrade python-telegram
-      - run: wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.22_amd64.deb
-      - run: sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.22_amd64.deb
+      - run: wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb
+      - run: sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb
       - run: $GITHUB_WORKSPACE/setup-cloudflared
         shell: bash
       # - run: $GITHUB_WORKSPACE/setup-proxies
