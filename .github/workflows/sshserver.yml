@@ -16,21 +16,20 @@ jobs:
       TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
       SECRET_FILES: ${{ secrets.SECRET_FILES }}
     steps:
-      - run: sudo rm -rf /usr/local /opt/hostedtoolcache /opt/az /opt/microsoft /opt/pipx /opt/google
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 22
-      - uses: actions/checkout@v3
-      - run: if [ ! -z "$SECRET_FILES" ]; then echo $SECRET_FILES | base64 --decode | tar -xz -C ./home/; fi
-      - run: cp -r ./home/. ~
-      - run: curl -L 'https://github.com/glotlabs/gdrive/releases/download/3.6.0/gdrive_linux-x64.tar.gz' | tar -xz -C ~/.local/bin
-      - run: sudo apt-get install -y unrar p7zip megatools aria2
-      - run: python3 -m venv ./tg
-      - run: ./tg/bin/pip install -r requirements.txt
-      - run: ./tg/bin/pip install --upgrade python-telegram
-      # - run: wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb
-      # - run: sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.23_amd64.deb
+      # - run: sudo rm -rf /usr/local /opt/hostedtoolcache /opt/az /opt/microsoft /opt/pipx /opt/google
+      # - name: Setup Node
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 22
+      # - uses: actions/checkout@v3
+      # - run: if [ ! -z "$SECRET_FILES" ]; then echo $SECRET_FILES | base64 --decode | tar -xz -C ./home/; fi
+      # - run: cp -r ./home/. ~
+      # - run: curl -L 'https://github.com/glotlabs/gdrive/releases/download/3.6.0/gdrive_linux-x64.tar.gz' | tar -xz -C ~/.local/bin
+      # - run: sudo apt-get install -y unrar p7zip megatools aria2
+      # - run: python3 -m venv ./tg
+      # - run: ./tg/bin/pip install -r requirements.txt
+      # - run: ./tg/bin/pip install --upgrade python-telegram
+
       - run: $GITHUB_WORKSPACE/setup-cloudflared
         shell: bash
       - run: $GITHUB_WORKSPACE/setup-proxies
