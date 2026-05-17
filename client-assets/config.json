@@ -1,0 +1,39 @@
+{
+  "inbounds": [
+    {
+      "port": 9997,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "timeout": 30,
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": false,
+        "destOverride": ["http", "tls"],
+        "metadataOnly": false
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "socks",
+      "settings": { "servers": [{ "address": "127.0.0.1", "port": 9999 }] }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "direct",
+      "settings": {}
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "direct",
+        "ip": ["geoip:private"]
+      }
+    ]
+  }
+}

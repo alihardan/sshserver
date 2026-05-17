@@ -1,0 +1,87 @@
+#!/bin/bash -e
+#
+# GNU Bash required for process substitution `<()` later.
+#
+# Environment variables:
+#
+
+# Install xray and configure socks inbound
+cd "$GITHUB_WORKSPACE"
+sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install --beta
+sudo apt-get install -y autossh sshpass
+echo '{
+  "inbounds": [
+    {
+      "port": 9999,
+      "listen": "127.0.0.1",
+      "protocol": "socks",
+      "sniffing": {
+          "enabled": false,
+          "destOverride": ["http", "tls"]
+      },
+      "settings": {
+          "auth": "noauth",
+          "udp": true
+      }
+    },
+    {
+      "listen": "0.0.0.0",
+      "port": 4433,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "1",
+            "flow": "xtls-rprx-vision"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "githubstatus.com:443",
+          "xver": 0,
+          "serverNames": ["githubstatus.com", "www.githubstatus.com"],
+          "privateKey": "UP8j_LtDMAazzf-d-U63LrTWM1XckIz9YIa8T0XvW2U",
+          "maxTimeDiff": 0,
+          "shortIds": ["b18d5c"]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
+}' | sudo tee /usr/local/etc/xray/config.json >/dev/null
+sudo systemctl restart xray
+
+# cloudflare tunnel
+
+#./cloudflared tunnel --no-autoupdate --url tcp://localhost:9999 2>&1 | tee cloudflared-socks.log | sed -u 's/^/cloudflared: /' &
+# autossh -oStrictHostKeyChecking=no -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -R 8778:localhost:4433 serveo.net &
+
+mkdir ~/.ssh
+
+ssh-keyscan "$SERVER_IP" >> ~/.ssh/known_hosts
+
+sshpass -p "$SERVER_PASS" ssh -N \
+  -o "ServerAliveInterval 30" \
+  -o "ServerAliveCountMax 3" \
+  -o "TCPKeepAlive yes" \
+  -R 0.0.0.0:8778:127.0.0.1:4433 \
+  "${SERVER_USER}@${SERVER_IP}" &
+
+# url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
+#hostname=${url:8}
+#message='sudo sh -c '"'"'echo -e $(resolveip -s '"$hostname"')"\t'"$hostname"'" >> /etc/hosts'"'"' && sudo -u tor cloudflared access tcp --hostname '"$url"' --url 0.0.0.0:9999 & sudo -u tor xray -c /config.json & sudo ./v2ray-transparent.bash -s'
+
+#ruinerme "$message"
+
+
+sleep 999999

@@ -1,0 +1,6 @@
+tg
+TgCrypto
+gdown
+pyrogram
+internetarchive
+setuptools
