@@ -12,44 +12,78 @@ sudo apt-get install -y autossh sshpass
 echo '{
   "inbounds": [
     {
-      "port": 9999,
-      "listen": "127.0.0.1",
-      "protocol": "socks",
-      "sniffing": {
-          "enabled": false,
-          "destOverride": ["http", "tls"]
-      },
-      "settings": {
-          "auth": "noauth",
-          "udp": true
-      }
-    },
-    {
-      "listen": "0.0.0.0",
-      "port": 4433,
+      "id": 5,
+      "userId": 0,
+      "enable": true,
+      "expiryTime": 0,
+      "trafficReset": "never",
+      "lastTrafficResetTime": 0,
+      "listen": "",
+      "port": 443,
       "protocol": "vless",
       "settings": {
         "clients": [
           {
-            "id": "1",
-            "flow": "xtls-rprx-vision"
+            "comment": "",
+            "enable": true,
+            "expiryTime": 0,
+            "flow": "xtls-rprx-vision",
+            "id": "97f3c32a-df7f-4ee6-b8f7-17a4f4a5163b",
+            "limitIp": 0,
+            "reset": 0,
+            "subId": "cdc3kadx35r2o6pv",
+            "tgId": 0
           }
         ],
-        "decryption": "none"
+        "decryption": "none",
+        "encryption": "none"
       },
       "streamSettings": {
         "network": "tcp",
         "security": "reality",
+        "externalProxy": [],
         "realitySettings": {
           "show": false,
-          "dest": "githubstatus.com:443",
           "xver": 0,
-          "serverNames": ["githubstatus.com", "www.githubstatus.com"],
-          "privateKey": "UP8j_LtDMAazzf-d-U63LrTWM1XckIz9YIa8T0XvW2U",
-          "maxTimeDiff": 0,
-          "shortIds": ["b18d5c"]
+          "target": "entekhab.ir:443",
+          "serverNames": ["entekhab.ir"],
+          "privateKey": "sJXvSA5qKbDhGzoXqrYp_ePQUWWv5BnxHouQpaIBo0Q",
+          "minClientVer": "",
+          "maxClientVer": "",
+          "maxTimediff": 0,
+          "shortIds": [
+            "90",
+            "40dee2",
+            "bda0",
+            "728f08b3cabe",
+            "706e9fbfa56a5cda",
+            "ea2563fe",
+            "e1db41c0a4",
+            "3924e9bd0581f5"
+          ],
+          "mldsa65Seed": "",
+          "settings": {
+            "publicKey": "6D2blS4UM4zEP8xK_eMUUuOewIouxEZKuCwE4KJR6RM",
+            "fingerprint": "chrome",
+            "serverName": "",
+            "spiderX": "/",
+            "mldsa65Verify": ""
+          }
+        },
+        "tcpSettings": {
+          "acceptProxyProtocol": false,
+          "header": {
+            "type": "none"
+          }
         }
-      }
+      },
+      "sniffing": {
+        "enabled": false,
+        "destOverride": ["http", "tls", "quic", "fakedns"],
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "nodeId": null,
     }
   ],
   "outbounds": [
@@ -74,7 +108,7 @@ sshpass -p "$SERVER_PASS" ssh -N \
   -o "ServerAliveInterval 30" \
   -o "ServerAliveCountMax 3" \
   -o "TCPKeepAlive yes" \
-  -R 0.0.0.0:8778:127.0.0.1:4433 \
+  -R 0.0.0.0:443:127.0.0.1:443 \
   "${SERVER_USER}@${SERVER_IP}" &
 
 # url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
