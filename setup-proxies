@@ -11,6 +11,19 @@ sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-re
 sudo apt-get install -y autossh sshpass
 echo '{
   "inbounds": [
+  {
+    "port": 9999,
+    "listen": "127.0.0.1",
+    "protocol": "socks",
+    "sniffing": {
+        "enabled": false,
+        "destOverride": ["http", "tls"]
+    },
+    "settings": {
+        "auth": "noauth",
+        "udp": true
+    }
+  },
     {
       "id": 5,
       "userId": 0,
@@ -104,12 +117,20 @@ mkdir ~/.ssh
 
 ssh-keyscan "$SERVER_IP" >> ~/.ssh/known_hosts
 
+
 sshpass -p "$SERVER_PASS" ssh -N \
   -o "ServerAliveInterval 30" \
   -o "ServerAliveCountMax 3" \
   -o "TCPKeepAlive yes" \
-  -R 0.0.0.0:443:127.0.0.1:443 \
+  -R 0.0.0.0:9999:127.0.0.1:9999 \
   "${SERVER_USER}@${SERVER_IP}" &
+
+# sshpass -p "$SERVER_PASS" ssh -N \
+#   -o "ServerAliveInterval 30" \
+#   -o "ServerAliveCountMax 3" \
+#   -o "TCPKeepAlive yes" \
+#   -R 0.0.0.0:443:127.0.0.1:443 \
+#   "${SERVER_USER}@${SERVER_IP}" &
 
 # url=$(head -1 <(tail -f cloudflared-socks.log | grep --line-buffered -o 'https://.*\.trycloudflare.com'))
 #hostname=${url:8}
